@@ -1,9 +1,10 @@
 <?php
 include 'assets/koneksi_database/koneksi.php';
 if (isset($_POST['login'])) {
-    if (jam_masuk($_POST) > 0) {
-        return true;
-    }
+    // if (jam_masuk($_POST) > 0) {
+    //     return true;
+    // }
+    var_dump(jam_masuk($_POST))
 }
 ?>
 <!DOCTYPE html>
