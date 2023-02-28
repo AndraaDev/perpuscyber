@@ -1,6 +1,9 @@
 <?php
 include 'assets/koneksi_database/koneksi.php';
 if (isset($_POST['login'])) {
+    if (jam_masuk($_POST) > 0) {
+        return true;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -9,7 +12,7 @@ if (isset($_POST['login'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Perpustakaan Cyber University | Login Page</title>
+    <title>Form Kehadiran Pengunjung</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -28,15 +31,15 @@ if (isset($_POST['login'])) {
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-header text-center">
-                <img src="assets/image/logo.png" alt="logo cyber university" width="150">
+                <img src="assets/image/logo.png" alt="logo cyber university" width="130">
             </div>
             <div class="card-body">
                 <h5 class="text-center text-bold">Perpustakaan Cyber University</h5>
                 <p class="login-box-msg">Form tambah data</p>
 
-                <form autocomplete="off" method="post">
+                <form method="post">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Jam..." readonly>
+                        <input type="text" class="form-control" placeholder="Jam..." readonly id="jam" name="jam">
                     </div>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Nama" name="nama" required>
@@ -66,7 +69,7 @@ if (isset($_POST['login'])) {
                         </div>
                         <div class="input-group mb-3 col-6">
                             <select name="tujuan" class="form-control" required>
-                                <option value="0">Pilih Tujuan</option>
+                                <option value="0">Tujuan</option>
                                 <option value="LIB">Library</option>
                                 <option value="SC">Student Corner</option>
                             </select>
@@ -74,7 +77,7 @@ if (isset($_POST['login'])) {
                     </div>
                     <div class="input-group mb-3">
                         <select name="library_plan" class="form-control" required>
-                            <option value="0">Pilih Tujuan</option>
+                            <option value="0">SubTujuan</option>
                             <option value="membaca_buku">Membaca buku</option>
                             <option value="meminjam_buku">Meminjam buku</option>
                             <option value="diskusi">Diskusi</option>

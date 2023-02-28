@@ -1,6 +1,14 @@
 <?php
 include '../assets/koneksi_database/koneksi.php';
 session_start();
+if (!isset($_SESSION['username'])) {
+    echo "<script>
+    alert('Anda belum login!');
+    window.location='../login.php';
+    </script>";
+}
+$querycetak = mysqli_query($koneksi, "SELECT * FROM tbl_user");
+$no = 1;
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +60,7 @@ session_start();
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index.php" class="brand-link">
-                <img src="../assets/image/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+                <img src="../assets/image/logo.png" alt="Logo Cyber University" class="brand-image img-circle elevation-3">
                 <span class="brand-text font-weight-light">Perpustakaan</span>
             </a>
 
@@ -90,7 +98,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="logout.php" class="nav-link" onclick="return confirm('Apakah anda yakin ingin keluar?')">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>
                                     Log out
@@ -134,14 +142,34 @@ session_start();
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Rendering engine</th>
-                                                <th>Browser</th>
-                                                <th>Platform(s)</th>
-                                                <th>Engine version</th>
-                                                <th>CSS grade</th>
+                                                <th>No.</th>
+                                                <th>Tanggal</th>
+                                                <th>Nama</th>
+                                                <th>NIM</th>
+                                                <th>Gender</th>
+                                                <th>Prodi</th>
+                                                <th>Tujuan</th>
+                                                <th>SubTujuan</th>
+                                                <th>Keluar Jam:</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <?php while ($cetak = mysqli_fetch_assoc($querycetak)) : ?>
+                                                <tr>
+                                                    <td><?= $no ?></td>
+                                                    <td><?= $cetak['time'] ?></td>
+                                                    <td><?= $cetak['nama'] ?></td>
+                                                    <td><?= $cetak['nim'] ?></td>
+                                                    <td><?= $cetak['gender'] ?></td>
+                                                    <td><?= $cetak['prodi'] ?></td>
+                                                    <td><?= $cetak['tujuan'] ?></td>
+                                                    <td><?= $cetak['library_plan'] ?></td>
+                                                    <td><?= $cetak['jam_masuk'] ?></td>
+                                                    <td><button class="btn btn-danger">Hapus</button></td>
+                                                </tr>
+                                            <?php $no++;
+                                            endwhile ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -192,8 +220,6 @@ session_start();
     <script src="../assets/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../assets/dist/js/adminlte.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="../assets/dist/js/demo.js"></script>
     <!-- Page specific script -->
     <script>
         $(function() {

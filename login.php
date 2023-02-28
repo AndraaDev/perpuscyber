@@ -14,7 +14,7 @@ if (isset($_POST['login'])) {
         // validasi 
         if ($cek['role'] == 'admin') {
             echo "<script>
-        alert('Login berhasil!')
+        alert('Login berhasil!');
         window.location='admin/index.php';
          </script>";
         }

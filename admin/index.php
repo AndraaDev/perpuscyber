@@ -1,6 +1,12 @@
 <?php
 include '../assets/koneksi_database/koneksi.php';
 session_start();
+if (!isset($_SESSION['username'])) {
+    echo "<script>
+alert('Anda belum login!');
+window.location='../login.php';
+</script>";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +93,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="logout.php" class="nav-link" onclick="return confirm('Apakah anda yakin ingin keluar?')">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>
                                     Log out
