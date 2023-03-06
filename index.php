@@ -12,7 +12,7 @@ if (isset($_POST['submit_data'])) {
     $library_plan = htmlspecialchars(strip_tags(trim($_POST['library_plan'])));
     $query = mysqli_query($koneksi, "INSERT INTO tbl_user SET time='$time',nama='$nama',nim='$nim',gender='$gender',prodi='$prodi',tujuan='$tujuan',library_plan='$library_plan',jam_masuk='NOW()'");
     if ($query) {
-        echo "<script> alert('tambah data berhasil!'); history.go(-1)  </script>";
+        echo "<script> alert('tambah data berhasil!'); history.go(-1)</script>";
     } else {
         echo "<script> alert('tambah data gagal!'); history.go(-1);</script>";
     }
