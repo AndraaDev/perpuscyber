@@ -7,7 +7,7 @@ if (!isset($_SESSION['username'])) {
     window.location='../login.php';
     </script>";
 }
-$querycetak = mysqli_query($koneksi, "SELECT * FROM tbl_user");
+$querycetak = mysqli_query($koneksi, "SELECT * FROM tbl_user ORDER BY id,time,nama,nim,gender,prodi,tujuan,library_plan,jam_keluar ASC");
 $no = 1;
 ?>
 
@@ -69,10 +69,10 @@ $no = 1;
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="../assets/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="../assets/image/AdminLTELogo.png" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block"><?= $_SESSION['username'] ?></a>
+                        <a href="#" class="d-block"><?= ucfirst($_SESSION['username']) ?></a>
                     </div>
                 </div>
 
@@ -165,8 +165,8 @@ $no = 1;
                                                     <td><?= $cetak['prodi'] ?></td>
                                                     <td><?= $cetak['tujuan'] ?></td>
                                                     <td><?= $cetak['library_plan'] ?></td>
-                                                    <td><?= $cetak['jam_masuk'] ?></td>
-                                                    <td><button class="btn btn-danger">Hapus</button></td>
+                                                    <td><?= $cetak['jam_keluar'] ?></td>
+                                                    <td><a class="btn btn-danger" href="delete_data.php?id=<?= $cetak['id'] ?>" onclick="return confirm('Apakah anda yakin ingin menghapus kolom ini?')">Hapus</a></td>
                                                 </tr>
                                             <?php $no++;
                                             endwhile ?>
@@ -227,6 +227,8 @@ $no = 1;
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
+                "paging": true,
+                "searching": true,
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
             $('#example2').DataTable({

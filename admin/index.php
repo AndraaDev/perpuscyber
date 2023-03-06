@@ -7,6 +7,20 @@ alert('Anda belum login!');
 window.location='../login.php';
 </script>";
 }
+
+// query untuk ambil data gender
+$chart_l = mysqli_query($koneksi, "SELECT count(nama) as jumlah_pengunjung FROM tbl_user WHERE gender='L' GROUP BY MONTH(DATE(time)) ORDER BY jumlah_pengunjung ASC");
+$chart_p = mysqli_query($koneksi, "SELECT count(nama) as jumlah_pengunjung FROM tbl_user WHERE gender='P' GROUP BY MONTH(DATE(time)) ORDER BY jumlah_pengunjung ASC");
+
+// query untuk menampilkan total pengunjung,pengunjung terbanyak,dan pengunjung tersedikit
+$query_total = mysqli_query($koneksi, "SELECT count(nama) as jumlah_pengunjung FROM tbl_user");
+$total = mysqli_fetch_assoc($query_total);
+
+$query_terbanyak = mysqli_query($koneksi, "SELECT count(nama) as pengunjung_terbanyak FROM tbl_user GROUP BY DATE(time) ORDER BY pengunjung_terbanyak DESC LIMIT 0,1");
+$pengunjung_t = mysqli_fetch_assoc($query_terbanyak);
+
+$query_tersedikit = mysqli_query($koneksi, "SELECT count(nama) as pengunjung_tersedikit FROM tbl_user GROUP BY DATE(time) ORDER BY pengunjung_tersedikit ASC");
+$pengunjung_s = mysqli_fetch_assoc($query_tersedikit);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +37,7 @@ window.location='../login.php';
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="../assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css?v=3.2.0">
     <!-- icon -->
     <link rel="shortcut icon" href="../assets/image/logo.png" type="image/x-icon">
 </head>
@@ -64,10 +78,10 @@ window.location='../login.php';
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="../assets/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="../assets/image/AdminLTELogo.png" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block"><?= $_SESSION['username'] ?></a>
+                        <a href="#" class="d-block"><?= ucfirst($_SESSION['username']) ?> <span class="right badge badge-success">Online</span></a>
                     </div>
                 </div>
 
@@ -133,7 +147,7 @@ window.location='../login.php';
                                 <div class="info-box-content">
                                     <span class="info-box-text">Total pengunjung</span>
                                     <span class="info-box-number">
-                                        0
+                                        <?= $total['jumlah_pengunjung'] ?>
                                         <small>orang</small>
                                     </span>
                                 </div>
@@ -144,12 +158,12 @@ window.location='../login.php';
                         <!-- /.col -->
                         <div class="col-12 col-sm-4 col-md-4">
                             <div class="info-box mb-3">
-                                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+                                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-user-friends"></i></span>
 
                                 <div class="info-box-content">
                                     <span class="info-box-text">Pengunjung Terbanyak</span>
                                     <span class="info-box-number">
-                                        0
+                                        <?= $pengunjung_t['pengunjung_terbanyak'] ?>
                                         <small>orang</small>
                                     </span>
                                 </div>
@@ -164,12 +178,12 @@ window.location='../login.php';
 
                         <div class="col-12 col-sm-4 col-md-4">
                             <div class="info-box mb-3">
-                                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+                                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-user-alt"></i></i></span>
 
                                 <div class="info-box-content">
                                     <span class="info-box-text">Pengunjung Tersedikit</span>
                                     <span class="info-box-number">
-                                        0
+                                        <?= $pengunjung_s['pengunjung_tersedikit'] ?>
                                         <small>orang</small>
                                     </span>
                                 </div>
@@ -190,12 +204,12 @@ window.location='../login.php';
                                     <div class="card-tools">
                                         </button>
                                         <div class="btn-group">
-                                            <button type="button" class="btn  btn-tool dropdown-toggle" data-toggle="dropdown">
+                                            <button type="button" class="btn  btn-outline-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                                 Download <i class="fas fa-download"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right" role="menu">
-                                                <a href="#" class="dropdown-item">Download As PDF</a>
-                                                <a href="#" class="dropdown-item">Download As JPG</a>
+                                                <a href="" class="dropdown-item"><i class="fas fa-file-pdf"></i> Download As PDF</a>
+                                                <a href="#" class="dropdown-item" id="download_jpg" download="statistik_pengunjung.jpg"><i class="fas fa-file-image"></i> Download As JPG</a>
                                             </div>
                                         </div>
                                     </div>
@@ -255,22 +269,25 @@ window.location='../login.php';
     <!-- overlayScrollbars -->
     <script src="../assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="../assets/dist/js/adminlte.js"></script>
+    <script src="../assets/dist/js/adminlte.js?v=3.2.0"></script>
     <!-- ChartJS -->
     <script src="../assets/plugins/chart.js/Chart.min.js"></script>
     <script>
+        // script chart.js untuk menampilkan statistik pengunjung di layar
         var areaChartData = {
             labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
             datasets: [{
                     label: 'Laki-laki',
                     backgroundColor: 'rgba(60,141,188,0.9)',
                     borderColor: 'rgba(60,141,188,0.8)',
-                    pointRadius: false,
+                    pointRadius: true,
                     pointColor: '#3b8bba',
                     pointStrokeColor: 'rgba(60,141,188,1)',
                     pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: [28, 48, 40, 19, 86, 27, 90, 65, 59, 80, 81, 56]
+                    data: [<?php while ($chartL = mysqli_fetch_assoc($chart_l)) {
+                                echo $chartL['jumlah_pengunjung'] . ',';
+                            } ?>]
                 },
                 {
                     label: 'Perempuan',
@@ -281,7 +298,9 @@ window.location='../login.php';
                     pointStrokeColor: '#c1c7d1',
                     pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56]
+                    data: [<?php while ($chartP = mysqli_fetch_assoc($chart_p)) {
+                                echo $chartP['jumlah_pengunjung'] . ',';
+                            } ?>]
                 },
             ]
         }
@@ -304,6 +323,17 @@ window.location='../login.php';
             data: barChartData,
             options: barChartOptions
         })
+
+        // script untuk export chart statistik pengunjung dalam format jpg
+        //Download Chart Image
+        document.getElementById("download_jpg").addEventListener('click', function() {
+            /*Get image of canvas element*/
+            var url_base64jp = document.getElementById("barChart").toDataURL("image/jpg");
+            /*get download button (tag: <a></a>) */
+            var a = document.getElementById("download_jpg");
+            /*insert chart image url to download button (tag: <a></a>) */
+            a.href = url_base64jp;
+        });
     </script>
 </body>
 

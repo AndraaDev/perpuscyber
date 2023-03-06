@@ -1,10 +1,21 @@
 <?php
 include 'assets/koneksi_database/koneksi.php';
-if (isset($_POST['login'])) {
-    // if (jam_masuk($_POST) > 0) {
-    //     return true;
-    // }
-    var_dump(jam_masuk($_POST))
+if (isset($_POST['submit_data'])) {
+    global $koneksi;
+    date_default_timezone_set("Asia/Jakarta");
+    $time = date("Y-m-d H:i:s");
+    $nama = htmlspecialchars(strip_tags(trim($_POST['nama'])));
+    $nim = htmlspecialchars(strip_tags(trim($_POST['nim'])));
+    $gender = htmlspecialchars(strip_tags(trim($_POST['gender'])));
+    $prodi = htmlspecialchars(strip_tags(trim($_POST['prodi'])));
+    $tujuan = htmlspecialchars(strip_tags(trim($_POST['tujuan'])));
+    $library_plan = htmlspecialchars(strip_tags(trim($_POST['library_plan'])));
+    $query = mysqli_query($koneksi, "INSERT INTO tbl_user SET time='$time',nama='$nama',nim='$nim',gender='$gender',prodi='$prodi',tujuan='$tujuan',library_plan='$library_plan',jam_masuk='NOW()'");
+    if ($query) {
+        echo "<script> alert('tambah data berhasil!'); history.go(-1)  </script>";
+    } else {
+        echo "<script> alert('tambah data gagal!'); history.go(-1);</script>";
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -40,7 +51,7 @@ if (isset($_POST['login'])) {
 
                 <form method="post">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Jam..." readonly id="jam" name="jam">
+                        <input type="text" class="form-control" placeholder="Jam..." readonly id="time" name="time">
                     </div>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Nama" name="nama" required>
@@ -110,6 +121,19 @@ if (isset($_POST['login'])) {
     <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="assets/dist/js/adminlte.min.js"></script>
+    <!-- script clock -->
+    <script>
+        var timeDisplay = document.getElementById("time");
+
+        function refreshTime() {
+            var dateString = new Date().toLocaleString("in-IN", {
+                timeZone: "Asia/Jakarta"
+            });
+            var formattedString = dateString.replace(", ", " - ");
+            timeDisplay.value = formattedString;
+        }
+        setInterval(refreshTime, 1000);
+    </script>
 </body>
 
 </html>
